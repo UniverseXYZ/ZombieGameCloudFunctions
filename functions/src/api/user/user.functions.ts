@@ -6,7 +6,6 @@ const userService = new UserService();
 
 export const getUserEligible = functions.https.onRequest(async (request, response): Promise<any> => {
   const [err, isEligible] = await to(userService.getUserEligible(<string>request.query.id));
-  console.log(err);
 
   if (err) {
     return response.status(500);
