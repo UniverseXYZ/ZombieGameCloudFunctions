@@ -4,3 +4,8 @@ export interface User {
   walletAddress: string;
   idIsUsed: string;
 }
+
+export interface GetUserEligibleRespose {
+  isEligible: boolean;
+  walletAddress?: string;
+}

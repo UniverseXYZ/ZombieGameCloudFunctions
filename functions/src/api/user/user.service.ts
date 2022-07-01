@@ -1,22 +1,18 @@
 import request from 'graphql-request';
+import { GetUserEligibleRespose } from './user';
 import { UserModel } from './user.model';
 import { GET_POLYMORPHS_QUERY } from './user.queries';
 
 export class UserService {
-  async getUserEligible(id: string) {
+  async getUserEligible(id: string): Promise<GetUserEligibleRespose> {
     const user = await this.getUser(id);
-    const hasPoly = await this.checkForPolyMorph(<string>user?.walletAddress);
+    const walletAddress = <string>user?.walletAddress;
+    const hasPoly = await this.getUserHasPolyMorphs(walletAddress);
 
-    if (!user) {
-      return false;
-    }
-
-    if (!hasPoly) {
-      return false;
-    }
-
-    if (user?.idIsUsed) {
-      return false;
+    if (!user || !hasPoly || user?.idIsUsed) {
+      return {
+        isEligible: false,
+      };
     }
 
     return UserModel.findOneAndUpdate({
@@ -25,7 +21,12 @@ export class UserService {
       'idIsUsed': true,
     })
       .exec()
-      .then(() => true);
+      .then(() => {
+        return {
+          isEligible: true,
+          walletAddress,
+        };
+      });
   }
 
   private getUser(id: string) {
@@ -36,10 +37,10 @@ export class UserService {
       .then((user) => user);
   }
 
-  private checkForPolyMorph(walletAddress: string) {
+  getUserHasPolyMorphs(walletAddress: string) {
     return request(<string>process.env.THE_GRAPH_URL, GET_POLYMORPHS_QUERY, {
       walletAddress,
     })
-      .then((res) => res);
+      .then((res) => res.transferEntities.length > 0);
   }
 }
