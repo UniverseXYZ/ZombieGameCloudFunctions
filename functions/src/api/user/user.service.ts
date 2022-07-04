@@ -1,5 +1,5 @@
 import request from 'graphql-request';
-import { GetUserEligibleRespose } from './user';
+import { GetUserEligibleRespose, TheGraphResponse } from './user';
 import { UserModel } from './user.model';
 import { GET_POLYMORPHS_QUERY } from './user.queries';
 
@@ -37,10 +37,15 @@ export class UserService {
       .then((user) => user);
   }
 
-  getUserHasPolyMorphs(walletAddress: string) {
-    return request(<string>process.env.THE_GRAPH_URL, GET_POLYMORPHS_QUERY, {
+  async getUserHasPolyMorphs(walletAddress: string) {
+    const theGraphV1Response = <TheGraphResponse>(await request(<string>process.env.THE_GRAPH_V1_URL, GET_POLYMORPHS_QUERY, {
       walletAddress,
-    })
-      .then((res) => res.transferEntities.length > 0);
+    }));
+
+    const theGraphV2Response = <TheGraphResponse>(await request(<string>process.env.THE_GRAPH_V2_URL, GET_POLYMORPHS_QUERY, {
+      walletAddress,
+    }));
+
+    return theGraphV1Response.transferEntities.length > 0 || theGraphV2Response.transferEntities.length > 0;
   }
 }

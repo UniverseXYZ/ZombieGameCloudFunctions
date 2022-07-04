@@ -9,3 +9,11 @@ export interface GetUserEligibleRespose {
   isEligible: boolean;
   walletAddress?: string;
 }
+
+export interface TheGraphResponse {
+  transferEntities: PolyMorph[];
+}
+
+export interface PolyMorph {
+  tokenId: string;
+}
