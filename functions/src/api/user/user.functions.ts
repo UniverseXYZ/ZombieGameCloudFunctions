@@ -5,13 +5,23 @@ import { UserService } from './user.service';
 const userService = new UserService();
 
 export const getUserEligible = functions.https.onRequest(async (request, response): Promise<any> => {
-  const [err, isEligible] = await to(userService.getUserEligible(<string>request.query.id));
+  const [err, userEligibleResponse] = await to(userService.getUserEligible(<string>request.query.id));
+
+  if (err) {
+    return response.status(500);
+  }
+
+  return response.json(userEligibleResponse);
+});
+
+export const getUserHasPolyMorphs = functions.https.onRequest(async (request, response): Promise<any> => {
+  const [err, hasPoly] = await to(userService.getUserHasPolyMorphs(<string>request.query.walletAddress));
 
   if (err) {
     return response.status(500);
   }
 
   return response.json({
-    isEligible,
+    hasPoly,
   });
 });
