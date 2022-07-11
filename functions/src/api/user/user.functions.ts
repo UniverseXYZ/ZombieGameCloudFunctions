@@ -33,5 +33,7 @@ export const getPolyMorphsMetadata = functions.https.onRequest(async (request, r
     return response.status(500);
   }
 
-  return response.json(metadata);
+  return response.json({
+    metadata,
+  });
 });
