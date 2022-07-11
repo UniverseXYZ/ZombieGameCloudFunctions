@@ -17,3 +17,9 @@ export interface TheGraphResponse {
 export interface PolyMorph {
   tokenId: string;
 }
+
+export interface MetaDataResponse {
+  name: string;
+  imageurl: string;
+  character: string;
+}

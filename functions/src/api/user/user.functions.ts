@@ -25,3 +25,13 @@ export const getUserHasPolyMorphs = functions.https.onRequest(async (request, re
     hasPoly,
   });
 });
+
+export const getPolyMorphsMetadata = functions.https.onRequest(async (request, response): Promise<any> => {
+  const [err, metadata] = await to(userService.getUserPolyMorphs(<string>request.query.walletAddress));
+
+  if (err) {
+    return response.status(500);
+  }
+
+  return response.json(metadata);
+});
