@@ -1,5 +1,5 @@
 import request from 'graphql-request';
-import { GetUserEligibleRespose, TheGraphResponse } from './user';
+import { GetUserEligibleRespose, SetUserScoreArgs, TheGraphResponse } from './user';
 import { UserModel } from './user.model';
 import { GET_POLYMORPHS_QUERY } from './user.queries';
 
@@ -47,5 +47,29 @@ export class UserService {
     }));
 
     return theGraphV1Response.transferEntities.length > 0 || theGraphV2Response.transferEntities.length > 0;
+  }
+
+  async setUserScore(args: SetUserScoreArgs) {
+    const user = await this.getUserFromWalletAddress(args.walletAddress);
+
+    if (user && user?.score >= args.score) {
+      return Promise.resolve();
+    }
+
+    return UserModel.findOneAndUpdate({
+      'walletAddress': args.walletAddress,
+    }, {
+      'score': args.score,
+    })
+      .exec()
+      .then((user) => user);
+  }
+
+  private getUserFromWalletAddress(walletAddress: string) {
+    return UserModel.findOne({
+      'walletAddress': walletAddress,
+    })
+      .exec()
+      .then((user) => user);
   }
 }
