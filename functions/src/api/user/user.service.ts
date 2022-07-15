@@ -63,41 +63,20 @@ export class UserService {
     let metadataV2 = [];
 
     if (v1Ids.length > 0) {
-      metadataV1 = await this.getV1MetadataFromTokenIds(v1Ids.join());
+      metadataV1 = await this.getMetadataFromTokenIds(v1Ids.join(), <string>process.env.THE_GRAPH_V1_GET_METADATA);
     }
 
     if (v2Ids.length > 0) {
-      metadataV2 = await this.getV2MetadataFromTokenIds(v2Ids.join());
+      metadataV2 = await this.getMetadataFromTokenIds(v2Ids.join(), <string>process.env.THE_GRAPH_V2_GET_METADATA);
     }
 
     return metadataV1.concat(metadataV2);
   }
 
-  private getV1MetadataFromTokenIds(tokenIds: string) {
+  private getMetadataFromTokenIds(tokenIds: string, url: string) {
     return axios({
       method: 'GET',
-      url: <string>process.env.THE_GRAPH_V1_GET_METADATA,
-      params: {
-        ids: tokenIds,
-      },
-    })
-      .then((res) => {
-        const polysMetadata = res.data;
-
-        return polysMetadata.map((metadata: MetaDataResponse) => {
-          return {
-            name: metadata.name,
-            type: metadata.character,
-            imageUrl: metadata.imageurl,
-          };
-        });
-      });
-  }
-
-  private getV2MetadataFromTokenIds(tokenIds: string) {
-    return axios({
-      method: 'GET',
-      url: <string>process.env.THE_GRAPH_V2_GET_METADATA,
+      url,
       params: {
         ids: tokenIds,
       },
