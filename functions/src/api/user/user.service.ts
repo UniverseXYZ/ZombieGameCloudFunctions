@@ -2,6 +2,7 @@ import request from 'graphql-request';
 import { GetUserEligibleRespose, SetUserScoreArgs, TheGraphResponse } from './user';
 import { UserModel } from './user.model';
 import { GET_POLYMORPHS_QUERY } from './user.queries';
+const flatten = require('flat');
 
 export class UserService {
   async getUserEligible(id: string): Promise<GetUserEligibleRespose> {
@@ -51,18 +52,21 @@ export class UserService {
 
   async setUserScore(args: SetUserScoreArgs) {
     const user = await this.getUserFromWalletAddress(args.walletAddress);
+    const updateQuery = {
+      ...args,
+    };
 
-    if (user && user?.score >= args.score) {
+    if (user!.score >= updateQuery.score!) {
       return Promise.resolve();
     }
 
     return UserModel.findOneAndUpdate({
       'walletAddress': args.walletAddress,
     }, {
-      'score': args.score,
+      ...flatten(updateQuery),
     })
       .exec()
-      .then((user) => user);
+      .then((updatedUser) => updatedUser);
   }
 
   private getUserFromWalletAddress(walletAddress: string) {

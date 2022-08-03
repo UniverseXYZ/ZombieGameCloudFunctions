@@ -11,6 +11,9 @@ const userSchema = new Schema({
   },
   idIsUsed: { type: Boolean, default: false },
   score: { type: Number, default: 0 },
+  enemyKillCount: { type: Number, default: 0 },
+  wave: { type: Number, default: 0 },
+  timeInSeconds: { type: Number, default: 0 },
 });
 
 export const UserModel = model<User>('users', userSchema);
