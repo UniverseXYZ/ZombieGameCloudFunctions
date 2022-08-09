@@ -7,10 +7,7 @@
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log",
-    "test": "jest --silent false",
-    "functions:lint": "npx eslint '**/*.{js,ts}'",
-    "functions:lint-fix": "npx eslint --fix '**/*.{js,ts}'"
+    "logs": "firebase functions:log"
   },
   "engines": {
     "node": "16"
@@ -23,6 +20,7 @@
     "dotenv": "^16.0.1",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.18.0",
+    "flat": "^5.0.2",
     "graphql-request": "^4.3.0",
     "graphql-tag": "^2.12.6",
     "jest": "^28.1.3",
