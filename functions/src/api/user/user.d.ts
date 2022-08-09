@@ -1,8 +1,13 @@
+
 export interface User {
   _id: string;
   id: string;
   walletAddress: string;
   idIsUsed: string;
+  score: number;
+  enemyKillCount: number;
+  wave: number;
+  timeInSeconds: number;
 }
 
 export interface GetUserEligibleRespose {
@@ -16,4 +21,12 @@ export interface TheGraphResponse {
 
 export interface PolyMorph {
   tokenId: string;
+}
+
+export interface SetUserScoreArgs {
+  score?: number;
+  walletAddress: string;
+  enemyKillCount?: number;
+  wave?: number;
+  timeInSeconds?: number;
 }
