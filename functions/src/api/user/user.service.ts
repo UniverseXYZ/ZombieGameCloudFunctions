@@ -23,10 +23,14 @@ export class UserService {
       'idIsUsed': true,
     })
       .exec()
-      .then(() => {
+      .then((usr) => {
         return {
           isEligible: true,
           walletAddress,
+          score: usr?.score,
+          enemyKillCount: usr?.enemyKillCount,
+          timeInSeconds: usr?.timeInSeconds,
+          wave: usr?.wave,
         };
       });
   }
@@ -83,11 +87,14 @@ export class UserService {
     const theGraphV1Response = <TheGraphResponse>(await request(<string>process.env.THE_GRAPH_V1_URL, GET_POLYMORPHS_QUERY, {
       walletAddress,
     }));
+
     const theGraphV2Response = <TheGraphResponse>(await request(<string>process.env.THE_GRAPH_V2_URL, GET_POLYMORPHS_QUERY, {
       walletAddress,
     }));
+
     const v1Ids = theGraphV1Response.transferEntities.map((entity) => entity.tokenId);
     const v2Ids = theGraphV2Response.transferEntities.map((entity) => entity.tokenId);
+
     let metadataV1 = [];
     let metadataV2 = [];
 
