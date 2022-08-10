@@ -1,8 +1,13 @@
+
 export interface User {
   _id: string;
   id: string;
   walletAddress: string;
   idIsUsed: string;
+  score: number;
+  enemyKillCount: number;
+  wave: number;
+  timeInSeconds: number;
 }
 
 export interface GetUserEligibleRespose {
@@ -22,4 +27,12 @@ export interface MetaDataResponse {
   name: string;
   imageurl: string;
   character: string;
+}
+
+export interface SetUserScoreArgs {
+  score?: number;
+  walletAddress: string;
+  enemyKillCount?: number;
+  wave?: number;
+  timeInSeconds?: number;
 }
