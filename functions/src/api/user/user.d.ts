@@ -23,6 +23,12 @@ export interface PolyMorph {
   tokenId: string;
 }
 
+export interface MetaDataResponse {
+  name: string;
+  imageurl: string;
+  character: string;
+}
+
 export interface SetUserScoreArgs {
   score?: number;
   walletAddress: string;

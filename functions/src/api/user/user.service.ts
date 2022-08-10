@@ -1,5 +1,6 @@
+import axios from 'axios';
 import request from 'graphql-request';
-import { GetUserEligibleRespose, SetUserScoreArgs, TheGraphResponse } from './user';
+import { GetUserEligibleRespose, MetaDataResponse, SetUserScoreArgs, TheGraphResponse } from './user';
 import { UserModel } from './user.model';
 import { GET_POLYMORPHS_QUERY } from './user.queries';
 const flatten = require('flat');
@@ -50,6 +51,7 @@ export class UserService {
     return theGraphV1Response.transferEntities.length > 0 || theGraphV2Response.transferEntities.length > 0;
   }
 
+
   async setUserScore(args: SetUserScoreArgs) {
     const user = await this.getUserFromWalletAddress(args.walletAddress);
     const updateQuery = {
@@ -76,4 +78,50 @@ export class UserService {
       .exec()
       .then((user) => user);
   }
+
+  async getUserPolyMorphs(walletAddress: string) {
+    const theGraphV1Response = <TheGraphResponse>(await request(<string>process.env.THE_GRAPH_V1_URL, GET_POLYMORPHS_QUERY, {
+      walletAddress,
+    }));
+    const theGraphV2Response = <TheGraphResponse>(await request(<string>process.env.THE_GRAPH_V2_URL, GET_POLYMORPHS_QUERY, {
+      walletAddress,
+    }));
+    const v1Ids = theGraphV1Response.transferEntities.map((entity) => entity.tokenId);
+    const v2Ids = theGraphV2Response.transferEntities.map((entity) => entity.tokenId);
+    let metadataV1 = [];
+    let metadataV2 = [];
+
+    if (v1Ids.length > 0) {
+      metadataV1 = await this.getMetadataFromTokenIds(v1Ids.join(), <string>process.env.THE_GRAPH_V1_GET_METADATA);
+    }
+
+    if (v2Ids.length > 0) {
+      metadataV2 = await this.getMetadataFromTokenIds(v2Ids.join(), <string>process.env.THE_GRAPH_V2_GET_METADATA);
+    }
+
+    return metadataV1.concat(metadataV2);
+  }
+
+  private getMetadataFromTokenIds(tokenIds: string, url: string) {
+    return axios({
+      method: 'GET',
+      url,
+      params: {
+        ids: tokenIds,
+      },
+    })
+      .then((res) => {
+        const polysMetadata = res.data;
+
+        return polysMetadata.map((metadata: MetaDataResponse) => {
+          return {
+            name: metadata.name,
+            type: metadata.character,
+            imageUrl: metadata.imageurl,
+          };
+        });
+      });
+  }
 }
+
+

@@ -20,6 +20,7 @@
     "@shelf/jest-mongodb": "^4.0.0",
     "@types/jest": "^28.1.6",
     "await-to-js": "^3.0.0",
+    "axios": "^0.27.2",
     "dotenv": "^16.0.1",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.18.0",

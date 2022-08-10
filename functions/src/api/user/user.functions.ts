@@ -27,6 +27,19 @@ export const getUserHasPolyMorphs = functions.https.onRequest(async (request, re
   });
 });
 
+export const getPolyMorphsMetadata = functions.https.onRequest(async (request, response): Promise<any> => {
+  const [err, metadata] = await to(userService.getUserPolyMorphs(<string>request.query.walletAddress));
+
+  if (err) {
+    return response.status(500);
+  }
+
+  return response.json({
+    metadata,
+  });
+});
+
+
 export const setUserScore = functions.https.onRequest(async (request, response): Promise<any> => {
   if (request.header('Zombie_Authorization') === process.env.AUTHORIZATION_CODE && request.header('user-agent')?.includes(<string>process.env.USER_AGENT)) {
     let score;
