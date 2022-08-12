@@ -38,6 +38,8 @@ jobs:
         env:
           THE_GRAPH_V1_URL: ${{ secrets.THE_GRAPH_V1_URL }}
           THE_GRAPH_V2_URL: ${{ secrets.THE_GRAPH_V2_URL }}
+          THE_GRAPH_V1_GET_METADATA: ${{ secrets.THE_GRAPH_V1_GET_METADATA }}
+          THE_GRAPH_V2_GET_METADATA: ${{ secrets.THE_GRAPH_V2_GET_METADATA }}
           V1_WALLET_ADDRESS: ${{ secrets.V1_WALLET_ADDRESS }}
           V2_WALLET_ADDRESS: ${{ secrets.V2_WALLET_ADDRESS }}
 
