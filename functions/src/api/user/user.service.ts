@@ -31,6 +31,11 @@ export class UserService {
       });
   }
 
+  async getIdUsed(walletAddress: string) {
+    const user = await this.getUserFromWalletAddress(walletAddress);
+    return user?.idIsUsed;
+  }
+
   private getUser(id: string) {
     return UserModel.findOne({
       'id': id,
