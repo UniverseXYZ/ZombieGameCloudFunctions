@@ -8,6 +8,11 @@ describe('UserServiceSpec', () => {
   let userService: UserService;
   let mongoMemoryServer: MongoMemoryServer;
   let userServiceSpecHelper: UserServiceSpecHelper;
+  const userMetrics = {
+    score: 10,
+    enemyKillCount: 1,
+    timeInSeconds: 10,
+  };
 
   beforeAll(async () => {
     mongoMemoryServer = await MongoMemoryServer.create();
@@ -42,5 +47,24 @@ describe('UserServiceSpec', () => {
 
     userEligibleResponse = await userService.getUserEligible(user.id);
     expect(userEligibleResponse.isEligible).toBe(false);
+  });
+
+  test('setUserScore', async () => {
+    const user = await userService.setUserScore({
+      walletAddress: <string>process.env.V1_WALLET_ADDRESS,
+      ...userMetrics,
+    });
+
+    expect(user?.score).toBe(userMetrics.score);
+    expect(user?.enemyKillCount).toBe(userMetrics.enemyKillCount);
+    expect(user?.timeInSeconds).toBe(userMetrics.timeInSeconds);
+  });
+
+  test('getUserPolyMorphsMetadata', async () => {
+    const metadata = await userService.getUserPolyMorphs(<string>process.env.V1_WALLET_ADDRESS);
+    expect(metadata).not.toBe([]);
+
+    const emptyMetadata = await userService.getUserPolyMorphs('');
+    expect(emptyMetadata).toStrictEqual([]);
   });
 });
