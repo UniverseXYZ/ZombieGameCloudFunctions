@@ -40,15 +40,13 @@ export const getPolyMorphsMetadata = functions.https.onRequest(async (request, r
 });
 
 export const getIdUsed = functions.https.onRequest(async (request, response): Promise<any> => {
-  const [err, isIdUsed] = await to(userService.getIdUsed(<string>request.query.walletAddress));
+  const [err, getIdUsedResponse] = await to(userService.getIdUsed(<string>request.query.walletAddress));
 
   if (err) {
     return response.status(500);
   }
 
-  return response.json({
-    isIdUsed,
-  });
+  return response.json(getIdUsedResponse);
 });
 
 

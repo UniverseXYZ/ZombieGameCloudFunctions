@@ -33,7 +33,10 @@ export class UserService {
 
   async getIdUsed(walletAddress: string) {
     const user = await this.getUserFromWalletAddress(walletAddress);
-    return user?.idIsUsed;
+    return {
+      isIdUsed: user?.idIsUsed ? user?.idIsUsed : false,
+      id: user?.id ? user.id : '',
+    };
   }
 
   private getUser(id: string) {
