@@ -13,6 +13,10 @@ export interface User {
 export interface GetUserEligibleRespose {
   isEligible: boolean;
   walletAddress?: string;
+  score?: number;
+  enemyKillCount?: number;
+  wave?: number;
+  timeInSeconds?: number;
 }
 
 export interface TheGraphResponse {
