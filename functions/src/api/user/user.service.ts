@@ -94,6 +94,8 @@ export class UserService {
       'walletAddress': args.walletAddress,
     }, {
       ...flatten(updateQuery),
+    }, {
+      new: true,
     })
       .exec()
       .then((updatedUser) => updatedUser);
