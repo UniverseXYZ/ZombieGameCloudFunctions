@@ -39,6 +39,16 @@ export const getPolyMorphsMetadata = functions.https.onRequest(async (request, r
   });
 });
 
+export const getIdUsed = functions.https.onRequest(async (request, response): Promise<any> => {
+  const [err, getIdUsedResponse] = await to(userService.getIdUsed(<string>request.query.walletAddress));
+
+  if (err) {
+    return response.status(500);
+  }
+
+  return response.json(getIdUsedResponse);
+});
+
 
 export const setUserScore = functions.https.onRequest(async (request, response): Promise<any> => {
   if (request.header('Zombie_Authorization') === process.env.AUTHORIZATION_CODE && request.header('user-agent')?.includes(<string>process.env.USER_AGENT)) {
