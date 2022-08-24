@@ -39,6 +39,16 @@ export const getPolyMorphsMetadata = functions.https.onRequest(async (request, r
   });
 });
 
+export const getIdUsed = functions.https.onRequest(async (request, response): Promise<any> => {
+  const [err, getIdUsedResponse] = await to(userService.getIdUsed(<string>request.query.walletAddress));
+
+  if (err) {
+    return response.status(500);
+  }
+
+  return response.json(getIdUsedResponse);
+});
+
 
 export const setUserScore = functions.https.onRequest(async (request, response): Promise<any> => {
   if (request.header('Zombie_Authorization') === process.env.AUTHORIZATION_CODE && request.header('user-agent')?.includes(<string>process.env.USER_AGENT)) {
@@ -77,4 +87,22 @@ export const setUserScore = functions.https.onRequest(async (request, response):
   }
 
   return response.sendStatus(403);
+});
+
+export const getUserId = functions.https.onRequest(async (request, response): Promise<any> => {
+  const [err, getUserIdResponse] = await to(userService.getUserId(<string>request.query.walletAddress));
+
+  if (err) {
+    return response.sendStatus(500);
+  }
+
+  if (!getUserIdResponse) {
+    return response.json({
+      errorMessage: 'You do not have a polymorph!',
+    });
+  }
+
+  return response.json({
+    code: getUserIdResponse.id,
+  });
 });
