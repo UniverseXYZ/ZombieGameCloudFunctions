@@ -31,6 +31,26 @@ export class UserService {
       });
   }
 
+  async getUserId(walletAddress: string) {
+    const hasPoly = await this.getUserHasPolyMorphs(walletAddress);
+    if (hasPoly) {
+      return UserModel.findOneAndUpdate({
+        'walletAddress': walletAddress,
+      }, {
+        walletAddress,
+        id: Math.random().toString(36).substring(2, 12).toUpperCase(),
+        idIsUsed: false,
+      }, {
+        upsert: true,
+        new: true,
+      })
+        .exec()
+        .then((user) => user);
+    }
+
+    return null;
+  }
+
   async getIdUsed(walletAddress: string) {
     const user = await this.getUserFromWalletAddress(walletAddress);
     return {
