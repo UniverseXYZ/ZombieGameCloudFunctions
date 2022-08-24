@@ -78,3 +78,21 @@ export const setUserScore = functions.https.onRequest(async (request, response):
 
   return response.sendStatus(403);
 });
+
+export const getUserId = functions.https.onRequest(async (request, response): Promise<any> => {
+  const [err, getUserIdResponse] = await to(userService.getUserId(<string>request.query.walletAddress));
+
+  if (err) {
+    return response.sendStatus(500);
+  }
+
+  if (!getUserIdResponse) {
+    return response.json({
+      errorMessage: 'You do not have a polymorph!',
+    });
+  }
+
+  return response.json({
+    code: getUserIdResponse.id,
+  });
+});
