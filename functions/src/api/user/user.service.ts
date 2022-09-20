@@ -139,6 +139,22 @@ export class UserService {
     return metadataV2;
   }
 
+  getLeaderboard() {
+    return UserModel
+      .find({})
+      .sort({ score: -1, _id: 1 })
+      .limit(25)
+      .select('walletAddress score enemyKillCount wave timeInSeconds')
+      .then((users) => users);
+  }
+
+  getPlaceInTheLeaderboard(walletAddress: string) {
+    return UserModel.find({})
+      .sort({ score: -1, _id: 1 })
+      .exec()
+      .then((users) => users.findIndex((user) => user.walletAddress === walletAddress) + 1);
+  }
+
   private getMetadataFromTokenIds(tokenIds: string, url: string) {
     return axios({
       method: 'GET',

@@ -117,3 +117,32 @@ export const getUserId = functions.https.onRequest(async (request, response): Pr
 });
 
 export const getUserId_dev = getUserId;
+
+export const getLeaderboard = functions.https.onRequest(async (request, response): Promise<any> => {
+  const [err, getLeaderboardResponse] = await to(userService.getLeaderboard());
+
+  if (err) {
+    return response.sendStatus(500);
+  }
+
+  return response.json({
+    leaderboard: getLeaderboardResponse,
+  });
+});
+
+export const getLeaderboard_dev = getLeaderboard;
+
+export const getPlaceInTheLeaderboard = functions.https.onRequest(async (request, response): Promise<any> => {
+  const [err, getPlaceInTheLeaderboardResponse] = await to(userService.getPlaceInTheLeaderboard(<string>request.query.walletAddress));
+
+  if (err) {
+    return response.sendStatus(500);
+  }
+
+  return response.json({
+    place: getPlaceInTheLeaderboardResponse,
+  });
+});
+
+export const getPlaceInTheLeaderboard_dev = getPlaceInTheLeaderboard;
+
