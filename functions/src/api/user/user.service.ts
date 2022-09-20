@@ -72,15 +72,15 @@ export class UserService {
   }
 
   async getUserHasPolyMorphs(walletAddress: string) {
-    const theGraphV1Response = <TheGraphResponse>(await request(<string>process.env.THE_GRAPH_V1_URL, GET_POLYMORPHS_QUERY, {
-      walletAddress,
-    }));
+    // const theGraphV1Response = <TheGraphResponse>(await request(<string>process.env.THE_GRAPH_V1_URL, GET_POLYMORPHS_QUERY, {
+    //   walletAddress,
+    // }));
 
     const theGraphV2Response = <TheGraphResponse>(await request(<string>process.env.THE_GRAPH_V2_URL, GET_POLYMORPHS_QUERY, {
       walletAddress,
     }));
 
-    return theGraphV1Response.transferEntities.length > 0 || theGraphV2Response.transferEntities.length > 0;
+    return theGraphV2Response.transferEntities.length > 0;
   }
 
 
@@ -114,29 +114,29 @@ export class UserService {
   }
 
   async getUserPolyMorphs(walletAddress: string) {
-    const theGraphV1Response = <TheGraphResponse>(await request(<string>process.env.THE_GRAPH_V1_URL, GET_POLYMORPHS_QUERY, {
-      walletAddress,
-    }));
+    // const theGraphV1Response = <TheGraphResponse>(await request(<string>process.env.THE_GRAPH_V1_URL, GET_POLYMORPHS_QUERY, {
+    //   walletAddress,
+    // }));
 
     const theGraphV2Response = <TheGraphResponse>(await request(<string>process.env.THE_GRAPH_V2_URL, GET_POLYMORPHS_QUERY, {
       walletAddress,
     }));
 
-    const v1Ids = theGraphV1Response.transferEntities.map((entity) => entity.tokenId);
+    // const v1Ids = theGraphV1Response.transferEntities.map((entity) => entity.tokenId);
     const v2Ids = theGraphV2Response.transferEntities.map((entity) => entity.tokenId);
 
-    let metadataV1 = [];
+    // let metadataV1 = [];
     let metadataV2 = [];
 
-    if (v1Ids.length > 0) {
-      metadataV1 = await this.getMetadataFromTokenIds(v1Ids.join(), <string>process.env.THE_GRAPH_V1_GET_METADATA);
-    }
+    // if (v1Ids.length > 0) {
+    //   metadataV1 = await this.getMetadataFromTokenIds(v1Ids.join(), <string>process.env.THE_GRAPH_V1_GET_METADATA);
+    // }
 
     if (v2Ids.length > 0) {
       metadataV2 = await this.getMetadataFromTokenIds(v2Ids.join(), <string>process.env.THE_GRAPH_V2_GET_METADATA);
     }
 
-    return metadataV1.concat(metadataV2);
+    return metadataV2;
   }
 
   private getMetadataFromTokenIds(tokenIds: string, url: string) {
@@ -160,5 +160,3 @@ export class UserService {
       });
   }
 }
-
-
