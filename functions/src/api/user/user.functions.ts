@@ -15,6 +15,8 @@ export const getUserEligible = functions.https.onRequest(async (request, respons
   return response.json(userEligibleResponse);
 });
 
+export const getUserEligible_dev = getUserEligible;
+
 export const getUserHasPolyMorphs = functions.https.onRequest(async (request, response): Promise<any> => {
   const [err, hasPoly] = await to(userService.getUserHasPolyMorphs(<string>request.query.walletAddress));
 
@@ -26,6 +28,8 @@ export const getUserHasPolyMorphs = functions.https.onRequest(async (request, re
     hasPoly,
   });
 });
+
+export const getUserHasPolyMorphs_dev = getUserHasPolyMorphs;
 
 export const getPolyMorphsMetadata = functions.https.onRequest(async (request, response): Promise<any> => {
   const [err, metadata] = await to(userService.getUserPolyMorphs(<string>request.query.walletAddress));
@@ -39,6 +43,8 @@ export const getPolyMorphsMetadata = functions.https.onRequest(async (request, r
   });
 });
 
+export const getPolyMorphsMetadata_dev = getPolyMorphsMetadata;
+
 export const getIdUsed = functions.https.onRequest(async (request, response): Promise<any> => {
   const [err, getIdUsedResponse] = await to(userService.getIdUsed(<string>request.query.walletAddress));
 
@@ -49,6 +55,7 @@ export const getIdUsed = functions.https.onRequest(async (request, response): Pr
   return response.json(getIdUsedResponse);
 });
 
+export const getIdUsed_dev = getIdUsed;
 
 export const setUserScore = functions.https.onRequest(async (request, response): Promise<any> => {
   if (request.header('Zombie_Authorization') === process.env.AUTHORIZATION_CODE && request.header('user-agent')?.includes(<string>process.env.USER_AGENT)) {
@@ -89,6 +96,8 @@ export const setUserScore = functions.https.onRequest(async (request, response):
   return response.sendStatus(403);
 });
 
+export const setUserScore_dev = setUserScore;
+
 export const getUserId = functions.https.onRequest(async (request, response): Promise<any> => {
   const [err, getUserIdResponse] = await to(userService.getUserId(<string>request.query.walletAddress));
 
@@ -106,3 +115,34 @@ export const getUserId = functions.https.onRequest(async (request, response): Pr
     code: getUserIdResponse.id,
   });
 });
+
+export const getUserId_dev = getUserId;
+
+export const getLeaderboard = functions.https.onRequest(async (request, response): Promise<any> => {
+  const [err, getLeaderboardResponse] = await to(userService.getLeaderboard());
+
+  if (err) {
+    return response.sendStatus(500);
+  }
+
+  return response.json({
+    leaderboard: getLeaderboardResponse,
+  });
+});
+
+export const getLeaderboard_dev = getLeaderboard;
+
+export const getPlaceInTheLeaderboard = functions.https.onRequest(async (request, response): Promise<any> => {
+  const [err, getPlaceInTheLeaderboardResponse] = await to(userService.getPlaceInTheLeaderboard(<string>request.query.walletAddress));
+
+  if (err) {
+    return response.sendStatus(500);
+  }
+
+  return response.json({
+    place: getPlaceInTheLeaderboardResponse,
+  });
+});
+
+export const getPlaceInTheLeaderboard_dev = getPlaceInTheLeaderboard;
+
