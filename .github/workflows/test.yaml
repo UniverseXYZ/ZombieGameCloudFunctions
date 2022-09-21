@@ -1,0 +1,48 @@
+name: Test
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+    branches:
+      - dev
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ./functions
+
+    strategy:
+      matrix:
+        os: [macos-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          cache: "npm"
+          cache-dependency-path: "./functions/package-lock.json"
+
+      - name: npm ci
+        env:
+          ENV: "dev"
+        run: |
+          npm ci
+
+      - name: Lint & Test
+        env:
+          THE_GRAPH_V1_URL: ${{ secrets.THE_GRAPH_V1_URL }}
+          THE_GRAPH_V2_URL: ${{ secrets.THE_GRAPH_V2_URL }}
+          THE_GRAPH_V1_GET_METADATA: ${{ secrets.THE_GRAPH_V1_GET_METADATA }}
+          THE_GRAPH_V2_GET_METADATA: ${{ secrets.THE_GRAPH_V2_GET_METADATA }}
+          V1_WALLET_ADDRESS: ${{ secrets.V1_WALLET_ADDRESS }}
+          V2_WALLET_ADDRESS: ${{ secrets.V2_WALLET_ADDRESS }}
+
+        run: |
+          npm run functions:lint
+          npm test

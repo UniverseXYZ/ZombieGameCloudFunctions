@@ -1,0 +1,63 @@
+{
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "test": "jest --silent false",
+    "functions:lint": "npx eslint '**/*.{js,ts}'",
+    "functions:lint-fix": "npx eslint --fix '**/*.{js,ts}'"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@shelf/jest-mongodb": "^4.0.0",
+    "@types/jest": "^28.1.6",
+    "await-to-js": "^3.0.0",
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.1",
+    "firebase-admin": "^10.0.2",
+    "firebase-functions": "^3.18.0",
+    "flat": "^5.0.2",
+    "graphql-request": "^4.3.0",
+    "graphql-tag": "^2.12.6",
+    "jest": "^28.1.3",
+    "mongodb-memory-server": "^8.8.0",
+    "mongoose": "^6.4.1",
+    "ts-jest": "^28.0.7"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "preset": "@shelf/jest-mongodb",
+    "testTimeout": 20000,
+    "transform": {
+      "\\.(ts|tsx|js|jsx)$": "ts-jest"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "ts",
+      "tsx",
+      "json"
+    ],
+    "moduleDirectories": [
+      "node_modules"
+    ]
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^0.2.0",
+    "typescript": "^4.5.4"
+  },
+  "private": true
+}
