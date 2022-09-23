@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { providers } from 'ethers';
 import request from 'graphql-request';
 import { GetUserEligibleRespose, MetaDataResponse, SetUserScoreArgs, TheGraphResponse } from './user';
 import { UserModel } from './user.model';
@@ -6,6 +7,11 @@ import { GET_POLYMORPHS_QUERY } from './user.queries';
 const flatten = require('flat');
 
 export class UserService {
+  private provider: providers.InfuraProvider;
+
+  constructor() {
+    this.provider = new providers.InfuraProvider('homestead', <string>process.env.INFURAID);
+  }
   async getUserEligible(id: string): Promise<GetUserEligibleRespose> {
     const user = await this.getUser(id);
     const walletAddress = <string>user?.walletAddress;
@@ -38,12 +44,14 @@ export class UserService {
   async getUserId(walletAddress: string) {
     const hasPoly = await this.getUserHasPolyMorphs(walletAddress);
     if (hasPoly) {
+      const ens = await this.provider.lookupAddress(walletAddress);
       return UserModel.findOneAndUpdate({
         'walletAddress': walletAddress,
       }, {
         walletAddress,
         id: Math.random().toString(36).substring(2, 12).toUpperCase(),
         idIsUsed: false,
+        ens: ens ? ens : '',
       }, {
         upsert: true,
         new: true,
@@ -144,8 +152,18 @@ export class UserService {
       .find({})
       .sort({ score: -1, _id: 1 })
       .limit(25)
-      .select('walletAddress score enemyKillCount wave timeInSeconds')
-      .then((users) => users);
+      .select('walletAddress score ens enemyKillCount wave timeInSeconds')
+      .then(async (users) => {
+        return users.map((user) => {
+          return {
+            walletAddress: user.ens != '' ? user.ens : user.walletAddress,
+            score: user.score,
+            enemyKillCount: user.enemyKillCount,
+            wave: user.wave,
+            timeInSeconds: user.timeInSeconds,
+          };
+        });
+      });
   }
 
   getPlaceInTheLeaderboard(walletAddress: string) {

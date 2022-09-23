@@ -14,6 +14,7 @@ const userSchema = new Schema({
   enemyKillCount: { type: Number, default: 0 },
   wave: { type: Number, default: 0 },
   timeInSeconds: { type: Number, default: 0 },
+  ens: { type: String, required: true },
 });
 
 export const UserModel = model<User>('users', userSchema);
