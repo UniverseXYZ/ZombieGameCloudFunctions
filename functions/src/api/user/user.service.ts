@@ -152,18 +152,8 @@ export class UserService {
       .find({})
       .sort({ score: -1, _id: 1 })
       .limit(25)
-      .select('walletAddress score ens enemyKillCount wave timeInSeconds')
-      .then(async (users) => {
-        return users.map((user) => {
-          return {
-            walletAddress: user.ens != '' ? user.ens : user.walletAddress,
-            score: user.score,
-            enemyKillCount: user.enemyKillCount,
-            wave: user.wave,
-            timeInSeconds: user.timeInSeconds,
-          };
-        });
-      });
+      .select('walletAddress score ens enemyKillCount wave timeInSeconds -_id')
+      .then(async (users) => users);
   }
 
   getPlaceInTheLeaderboard(walletAddress: string) {
