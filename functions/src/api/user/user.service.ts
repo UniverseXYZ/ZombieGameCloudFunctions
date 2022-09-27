@@ -145,7 +145,7 @@ export class UserService {
       metadataV2 = await this.getMetadataFromTokenIds(v2Ids.join(), <string>process.env.THE_GRAPH_V2_GET_METADATA);
     }
 
-    const numberOfDeviants = metadataDeviants.length >= 5 ? 5 : metadataDeviants.length;
+    const numberOfDeviants = deviantsIds.length > 5 ? 5 : deviantsIds.length;
     for (let i = 0; i < numberOfDeviants; i++) {
       const metadata = await this.getDeviantsMetadataFromTokenId(deviantsIds[i]);
       metadataDeviants.push(metadata);
