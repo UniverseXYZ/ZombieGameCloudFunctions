@@ -8,6 +8,7 @@ export interface User {
   enemyKillCount: number;
   wave: number;
   timeInSeconds: number;
+  ens: string;
 }
 
 export interface GetUserEligibleRespose {
