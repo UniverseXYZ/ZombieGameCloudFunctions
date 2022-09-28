@@ -43,6 +43,7 @@ jobs:
           V1_WALLET_ADDRESS: ${{ secrets.V1_WALLET_ADDRESS }}
           V2_WALLET_ADDRESS: ${{ secrets.V2_WALLET_ADDRESS }}
           THE_GRAPH_DEVIANTS_URL: ${{ secrets.THE_GRAPH_DEVIANTS_URL }}
+          GET_DEVIANTS_METADATA: ${{ secrets.GET_DEVIANTS_METADATA }}
 
         run: |
           npm run functions:lint
